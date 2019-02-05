@@ -1,5 +1,6 @@
 from math import sqrt
 
+
 # Calculate accuracy percentage between two lists
 def accuracy_metric(actual, predicted):
   correct = 0
@@ -45,25 +46,27 @@ def rmse_metric(actual, predicted):
         sum_error += pow((p-a), 2)
     return sqrt(sum_error / len(actual))
 
-# # Test confusion matrix with integers
-# actual = ['a','a','a','a','a','b','b','b','b','b']
-# predicted = ['a','b','b','a','a','b','a','b','b','b']
-# unique, matrix, lookup = confusion_matrix(actual, predicted)
-# print(lookup, unique)
-# # print(unique)
-# # print(matrix)
-# print_confusion_matrix(unique, matrix)
+
+if __name__=='__main__':
+    # # Test confusion matrix with integers
+    # actual = ['a','a','a','a','a','b','b','b','b','b']
+    # predicted = ['a','b','b','a','a','b','a','b','b','b']
+    # unique, matrix, lookup = confusion_matrix(actual, predicted)
+    # print(lookup, unique)
+    # # print(unique)
+    # # print(matrix)
+    # print_confusion_matrix(unique, matrix)
 
 
-# # Test MAE
-# actual = [0.1, 0.2, 0.3, 0.4, 0.5]
-# predicted = [0.11, 0.19, 0.29, 0.41, 0.5]
-# mae = mae_metric(actual, predicted)
-# print(mae)
+    # # Test MAE
+    # actual = [0.1, 0.2, 0.3, 0.4, 0.5]
+    # predicted = [0.11, 0.19, 0.29, 0.41, 0.5]
+    # mae = mae_metric(actual, predicted)
+    # print(mae)
 
-# Test RMSE
-actual = [0.1, 0.2, 0.3, 0.4, 0.5]
-predicted = [0.11, 0.19, 0.29, 0.41, 0.5]
-rmse = rmse_metric(actual, predicted)
-print(rmse)
+    # Test RMSE
+    actual = [0.1, 0.2, 0.3, 0.4, 0.5]
+    predicted = [0.11, 0.19, 0.29, 0.41, 0.5]
+    rmse = rmse_metric(actual, predicted)
+    print('RMSE: {}'.format(rmse))
 

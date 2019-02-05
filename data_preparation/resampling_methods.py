@@ -17,9 +17,7 @@ def train_test_split(dataset, split=0.6):
 def cross_validation_split(dataset, k=3):
     dataset_split = list()
     dataset_copy = copy(dataset)
-    print(len(dataset))
     fold_size = int(len(dataset)/k)
-    print(fold_size)
     for i in range(k):
         fold_data = list()
         while len(fold_data) < fold_size:
@@ -28,18 +26,19 @@ def cross_validation_split(dataset, k=3):
         dataset_split.append(fold_data)
     return dataset_split
 
-# # test train/test split
-# seed(1)
-# dataset = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
-# train, test = train_test_split(dataset)
-# print(train)
-# print(test)
 
+if __name__=='__main__':
+    # # test train/test split
+    # seed(1)
+    # dataset = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
+    # train, test = train_test_split(dataset)
+    # print(train)
+    # print(test)
 
-# test cross validation split
-seed(1)
-dataset = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
-folds = cross_validation_split(dataset, 4)
-print(folds)
+    # test cross validation split
+    seed(1)
+    dataset = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]
+    folds = cross_validation_split(dataset, 4)
+    print('Folds:\n{}'.format(folds))
 
 

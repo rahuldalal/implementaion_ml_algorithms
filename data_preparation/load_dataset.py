@@ -79,58 +79,59 @@ def standardize_dataset(dataset, means, stdevs):
             row[i] = (row[i]-means[i])/stdevs[i]
 
 
-# Small dataset to check normalization
-# dataset = [[50, 30], [20, 90]]
-# print(dataset)
-# minmax = dataset_minmax(dataset)
-# normalize_dataset(dataset, minmax)
-# print(dataset)
+if __name__ == '__main__':
+    # Test Loading iris dataset
+    dataset_base_path = os.path.join(os.path.dirname(os.getcwd()), 'datasets')
+    filename = 'iris.csv'
+    dataset = load_dataset(os.path.join(dataset_base_path, filename))
+    print('Loaded data file {0} with {1} rows and {2} columns'.format(filename, len(dataset), len(dataset[0])))
+    # print('Iris dataset string vals: \n{}'.format(dataset[0]))
+    # Convert string to float for all such columns
+    for column in range(len(dataset[0]) - 1):
+        str_column_to_float(dataset, column)
+    class_lookup = str_column_to_int(dataset, len(dataset[0]) - 1)
+    print('Iris dataset float vals + categorical (integer) encoding: \n{}'.format(dataset[0]))
 
 
-# Small dataset to check standardization
-# dataset = [[50, 30], [20, 90], [30, 50]]
-# print(dataset)
-# # Estimate mean and standard deviation
-# means = column_means(dataset)
-# stdevs = column_stdevs(dataset, means)
-# print(means)
-# print(stdevs)
-# # standardize dataset
-# standardize_dataset(dataset, means, stdevs)
-# print(dataset)
+    # Small dataset to check normalization
+    # dataset = [[50, 30], [20, 90]]
+    # print(dataset)
+    # minmax = dataset_minmax(dataset)
+    # normalize_dataset(dataset, minmax)
+    # print(dataset)
 
 
-# # Load pima diabetes dataset
-# dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
-# filename = 'pima-indians-diabetes.csv'
-# dataset = load_dataset(os.path.join(dataset_base_path, filename))
-# print('Loaded data file {0} with {1} rows and {2} columns'.format(filename, len(dataset), len(dataset[0])))
-# # print('pima-indians-diabete dataset string vals: \n{}'.format(dataset[0]))
-# # Convert string to float for all such columns
-# for column in range(len(dataset[0])):
-#     str_column_to_float(dataset, column)
-# print('pima-indians-diabete dataset float vals: \n{}'.format(dataset[0]))
-# # Normalize pima diabetes dataset
-# minmax = dataset_minmax(dataset)
-# normalize_dataset(dataset, minmax)
-# print('pima-indians-diabete dataset normalized: \n{}'.format(dataset[0]))
-# # Standardize dataset
-# # Estimate mean and standard deviation
-# means = column_means(dataset)
-# stdevs = column_stdevs(dataset, means)
-# standardize_dataset(dataset, means, stdevs)
-# print('pima-indians-diabete dataset standardized: \n{}'.format(dataset[0]))
+    # Small dataset to check standardization
+    # dataset = [[50, 30], [20, 90], [30, 50]]
+    # print(dataset)
+    # # Estimate mean and standard deviation
+    # means = column_means(dataset)
+    # stdevs = column_stdevs(dataset, means)
+    # print(means)
+    # print(stdevs)
+    # # standardize dataset
+    # standardize_dataset(dataset, means, stdevs)
+    # print(dataset)
 
 
-# Load iris dataset
-dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
-filename = 'iris.csv'
-dataset = load_dataset(os.path.join(dataset_base_path, filename))
-print('Loaded data file {0} with {1} rows and {2} columns'.format(filename, len(dataset), len(dataset[0])))
-# print('Iris dataset string vals: \n{}'.format(dataset[0]))
-# Convert string to float for all such columns
-for column in range(len(dataset[0])-1):
-    str_column_to_float(dataset, column)
-class_lookup = str_column_to_int(dataset, len(dataset[0])-1)
-print('Iris dataset float vals + categorical (integer) encoding: \n{}'.format(dataset[0]))
+    # # Load pima diabetes dataset
+    # dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
+    # filename = 'pima-indians-diabetes.csv'
+    # dataset = load_dataset(os.path.join(dataset_base_path, filename))
+    # print('Loaded data file {0} with {1} rows and {2} columns'.format(filename, len(dataset), len(dataset[0])))
+    # # print('pima-indians-diabete dataset string vals: \n{}'.format(dataset[0]))
+    # # Convert string to float for all such columns
+    # for column in range(len(dataset[0])):
+    #     str_column_to_float(dataset, column)
+    # print('pima-indians-diabete dataset float vals: \n{}'.format(dataset[0]))
+    # # Normalize pima diabetes dataset
+    # minmax = dataset_minmax(dataset)
+    # normalize_dataset(dataset, minmax)
+    # print('pima-indians-diabete dataset normalized: \n{}'.format(dataset[0]))
+    # # Standardize dataset
+    # # Estimate mean and standard deviation
+    # means = column_means(dataset)
+    # stdevs = column_stdevs(dataset, means)
+    # standardize_dataset(dataset, means, stdevs)
+    # print('pima-indians-diabete dataset standardized: \n{}'.format(dataset[0]))
 
