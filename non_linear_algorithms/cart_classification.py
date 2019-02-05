@@ -4,69 +4,10 @@ from csv import reader
 from copy import copy, deepcopy
 import os
 
-
-# Load dataset
-def load_dataset(filename):
-    dataset = list()
-    with open(filename, 'r') as file:
-        csv_file = reader(file)
-        for row in csv_file:
-            # remove empty rows
-            if not row:
-                continue
-            dataset.append(row)
-    return dataset
-
-
-# Convert all a column from string to float (all rows). Does not return anything. Makes changes in place
-def str_column_to_float(dataset, column):
-    for row in dataset:
-        row[column] = float(row[column].strip())
-
-
-# Calculate accuracy percentage between two lists
-def accuracy_metric(actual, predicted):
-    correct = 0
-    for i in range(len(actual)):
-        if actual[i] == predicted[i]:
-            correct += 1
-    return correct / float(len(actual)) * 100.0
-
-
-# Split a dataset into k-fold
-def cross_validation_split(dataset, k=3):
-    dataset_split = list()
-    dataset_copy = copy(dataset)
-    # print(len(dataset))
-    fold_size = int(len(dataset)/k)
-    # print(fold_size)
-    for i in range(k):
-        fold_data = list()
-        while len(fold_data) < fold_size:
-            index = randrange(len(dataset_copy))
-            fold_data.append(dataset_copy.pop(index))
-        dataset_split.append(fold_data)
-    return dataset_split
-
-
-# Evaluate an algorithm using a cross avalidation harness
-def evaluate_algorithm(dataset, algorithm, n_folds, *args):
-    folds = cross_validation_split(dataset, n_folds)
-    # print(folds)
-    scores = list()
-    for fold in folds:
-        train_set = list(folds) # shallow copy of the folds
-        train_set.remove(fold)
-        # To merge all the remaining folds
-        train_set = sum(train_set, [])  # sum requires two args..hence empty list
-        # print(train_set)
-        test_set = deepcopy(fold)
-        for row in test_set:
-            row[-1] = None
-        predicted = algorithm(train_set, test_set, *args)
-        actual = [row[-1] for row in fold]
-        scores.append(accuracy_metric(actual, predicted))
-    return scores
+# Local imports
+from data_preparation.load_dataset import load_dataset, str_column_to_float
+from data_preparation.evaluation_metrics import accuracy_metric
+from data_preparation.cross_validation_harness import evaluate_algorithm
 
 
 # Calculate the Gini index for a split dataset
@@ -188,72 +129,69 @@ def decision_tree(train_set, test_set, max_depth, min_size):
         prediction.append(predict(root, row))
     return prediction
 
+if __name__ == '__main__':
+    # # test Gini values
+    # print(gini_index([[[1, 1], [1, 0]], [[1, 1], [1, 0]]], [0, 1]))
+    # print(gini_index([[[1, 0], [1, 0]], [[1, 1], [1, 1]]], [0, 1]))
 
-# # test Gini values
-# print(gini_index([[[1, 1], [1, 0]], [[1, 1], [1, 0]]], [0, 1]))
-# print(gini_index([[[1, 0], [1, 0]], [[1, 1], [1, 1]]], [0, 1]))
+    # # Test getting the best split
+    # dataset = [[2.771244718,1.784783929,0],
+    #   [1.728571309,1.169761413,0],
+    #   [3.678319846,2.81281357,0],
+    #   [3.961043357,2.61995032,0],
+    #   [2.999208922,2.209014212,0],
+    #   [7.497545867,3.162953546,1],
+    #   [9.00220326,3.339047188,1],
+    #   [7.444542326,0.476683375,1],
+    #   [10.12493903,3.234550982,1],
+    #   [6.642287351,3.319983761,1]]
+    # split = get_split(dataset)
+    # print('Split: [X%d = %.3f]' % ((split['index']+1), split['value']))
 
+    # Test building and printing a tree
+    # dataset = [[2.771244718,1.784783929,0],
+    #   [1.728571309,1.169761413,0],
+    #   [3.678319846,2.81281357,0],
+    #   [3.961043357,2.61995032,0],
+    #   [2.999208922,2.209014212,0],
+    #   [7.497545867,3.162953546,1],
+    #   [9.00220326,3.339047188,1],
+    #   [7.444542326,0.476683375,1],
+    #   [10.12493903,3.234550982,1],
+    #   [6.642287351,3.319983761,1]]
+    # tree = build_tree(dataset, 3, 1)
+    # print_tree(tree)
 
-# # Test getting the best split
-# dataset = [[2.771244718,1.784783929,0],
-#   [1.728571309,1.169761413,0],
-#   [3.678319846,2.81281357,0],
-#   [3.961043357,2.61995032,0],
-#   [2.999208922,2.209014212,0],
-#   [7.497545867,3.162953546,1],
-#   [9.00220326,3.339047188,1],
-#   [7.444542326,0.476683375,1],
-#   [10.12493903,3.234550982,1],
-#   [6.642287351,3.319983761,1]]
-# split = get_split(dataset)
-# print('Split: [X%d = %.3f]' % ((split['index']+1), split['value']))
+    # Test prediction with a decision tree
+    # dataset = [[2.771244718,1.784783929,0],
+    #   [1.728571309,1.169761413,0],
+    #   [3.678319846,2.81281357,0],
+    #   [3.961043357,2.61995032,0],
+    #   [2.999208922,2.209014212,0],
+    #   [7.497545867,3.162953546,1],
+    #   [9.00220326,3.339047188,1],
+    #   [7.444542326,0.476683375,1],
+    #   [10.12493903,3.234550982,1],
+    #   [6.642287351,3.319983761,1]]
+    # stump = {'index': 0, 'right': 1, 'value': 6.642287351, 'left': 0}
+    # for row in dataset:
+    #     prediction = predict(stump, row)
+    #     print('Expected=%d, Got=%d' % (row[-1], prediction))
 
-# Test building and printing a tree
-# dataset = [[2.771244718,1.784783929,0],
-#   [1.728571309,1.169761413,0],
-#   [3.678319846,2.81281357,0],
-#   [3.961043357,2.61995032,0],
-#   [2.999208922,2.209014212,0],
-#   [7.497545867,3.162953546,1],
-#   [9.00220326,3.339047188,1],
-#   [7.444542326,0.476683375,1],
-#   [10.12493903,3.234550982,1],
-#   [6.642287351,3.319983761,1]]
-# tree = build_tree(dataset, 3, 1)
-# print_tree(tree)
+    # Load dataset
+    seed(1)
+    dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
+    filename = 'data_banknote_authentication.csv'
+    dataset = load_dataset(os.path.join(dataset_base_path, filename))
 
+    # Convert string to float for all such columns
+    for column in range(len(dataset[0])):
+        str_column_to_float(dataset, column)
 
-# Test prediction with a decision tree
-# dataset = [[2.771244718,1.784783929,0],
-#   [1.728571309,1.169761413,0],
-#   [3.678319846,2.81281357,0],
-#   [3.961043357,2.61995032,0],
-#   [2.999208922,2.209014212,0],
-#   [7.497545867,3.162953546,1],
-#   [9.00220326,3.339047188,1],
-#   [7.444542326,0.476683375,1],
-#   [10.12493903,3.234550982,1],
-#   [6.642287351,3.319983761,1]]
-# stump = {'index': 0, 'right': 1, 'value': 6.642287351, 'left': 0}
-# for row in dataset:
-#     prediction = predict(stump, row)
-#     print('Expected=%d, Got=%d' % (row[-1], prediction))
-
-
-# Load dataset
-seed(1)
-dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
-filename = 'data_banknote_authentication.csv'
-dataset = load_dataset(os.path.join(dataset_base_path, filename))
-
-# Convert string to float for all such columns
-for column in range(len(dataset[0])):
-    str_column_to_float(dataset, column)
-
-# evaluate algorithm
-n_folds = 5
-max_depth = 5
-min_size = 10
-scores = evaluate_algorithm(dataset, decision_tree, n_folds, max_depth, min_size)
-print('Scores: %s' % scores)
-print('Mean Accuracy: %.3f%%' % (sum(scores)/float(len(scores))))
+    # evaluate algorithm
+    n_folds = 5
+    max_depth = 5
+    min_size = 10
+    scores = evaluate_algorithm(dataset, decision_tree, n_folds, accuracy_metric, max_depth, min_size)
+    print('Scores: %s' % scores)
+    print('Mean Accuracy: %.3f%%' % (sum(scores)/float(len(scores))))
