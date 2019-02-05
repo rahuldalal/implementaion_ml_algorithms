@@ -1,9 +1,7 @@
 from random import seed, randrange
 from math import exp, log
 
-from csv import reader
 from random import randrange, seed
-from copy import copy, deepcopy
 import os
 
 # Local imports
