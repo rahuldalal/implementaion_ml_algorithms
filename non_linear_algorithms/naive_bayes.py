@@ -1,8 +1,6 @@
 from collections import defaultdict
 from math import sqrt, pi, exp
-from csv import reader
-from copy import deepcopy, copy
-from random import randrange, seed
+from random import seed
 import os
 
 
@@ -11,80 +9,6 @@ from data_preparation.load_dataset import load_dataset, str_column_to_float, str
 from data_preparation.cross_validation_harness import evaluate_algorithm
 from data_preparation.evaluation_metrics import accuracy_metric
 
-# Load dataset
-# def load_dataset(filename):
-#     dataset = list()
-#     with open(filename, 'r') as file:
-#         csv_file = reader(file)
-#         for row in csv_file:
-#             # remove empty rows
-#             if not row:
-#                 continue
-#             dataset.append(row)
-#     return dataset
-
-
-# # Convert all a column from string to float (all rows). Does not return anything. Makes changes in place
-# def str_column_to_float(dataset, column):
-#     for row in dataset:
-#         row[column] = float(row[column].strip())
-
-
-# # Convert categorical data types in a column to integers
-# def str_column_to_int(dataset, column):
-#     class_values = [row[column] for row in dataset]
-#     class_values_unique = set(class_values)
-#     lookup = dict()
-#     for index, val in enumerate(class_values_unique):
-#         lookup[val] = index
-#     for row in dataset:
-#         row[column] = lookup.get(row[column])
-#     return lookup # In case downstream users want to use the mapping
-
-
-# Split a dataset into k-fold
-# def cross_validation_split(dataset, k=3):
-#     dataset_split = list()
-#     dataset_copy = copy(dataset)
-#     # print(len(dataset))
-#     fold_size = int(len(dataset)/k)
-#     # print(fold_size)
-#     for i in range(k):
-#         fold_data = list()
-#         while len(fold_data) < fold_size:
-#             index = randrange(len(dataset_copy))
-#             fold_data.append(dataset_copy.pop(index))
-#         dataset_split.append(fold_data)
-#     return dataset_split
-
-
-# Calculate accuracy percentage between two lists
-# def accuracy_metric(actual, predicted):
-#     correct = 0
-#     for i in range(len(actual)):
-#         if actual[i] == predicted[i]:
-#             correct += 1
-#     return correct / float(len(actual)) * 100.0
-
-
-# Evaluate an algorithm using a cross avalidation harness
-# def evaluate_algorithm(dataset, algorithm, n_folds, *args):
-#     folds = cross_validation_split(dataset, n_folds)
-#     # print(folds)
-#     scores = list()
-#     for fold in folds:
-#         train_set = list(folds) # shallow copy of the folds
-#         train_set.remove(fold)
-#
-#         train_set = sum(train_set, [])
-#         # print(train_set)
-#         test_set = deepcopy(fold)
-#         for row in test_set:
-#             row[-1] = None
-#         predicted = algorithm(train_set, test_set, *args)
-#         actual = [row[-1] for row in fold]
-#         scores.append(accuracy_metric(actual, predicted))
-#     return scores
 
 # Split the dataset by class values, returns a dictionary
 def separate_by_class(dataset):
@@ -155,54 +79,54 @@ def naive_bayes(train, test):
         predicted.append(predict(train_summaries, row))
     return predicted
 
-dataset = [[3.393533211, 2.331273381, 0],
-           [3.110073483, 1.781539638, 0],
-           [1.343808831, 3.368360954, 0],
-           [3.582294042, 4.67917911, 0],
-           [2.280362439, 2.866990263, 0],
-           [7.423436942, 4.696522875, 1],
-           [5.745051997, 3.533989803, 1],
-           [9.172168622, 2.511101045, 1],
-           [7.792783481, 3.424088941, 1],
-           [7.939820817, 0.791637231, 1]]
+if __name__=='__main__':
+    dataset = [[3.393533211, 2.331273381, 0],
+               [3.110073483, 1.781539638, 0],
+               [1.343808831, 3.368360954, 0],
+               [3.582294042, 4.67917911, 0],
+               [2.280362439, 2.866990263, 0],
+               [7.423436942, 4.696522875, 1],
+               [5.745051997, 3.533989803, 1],
+               [9.172168622, 2.511101045, 1],
+               [7.792783481, 3.424088941, 1],
+               [7.939820817, 0.791637231, 1]]
 
-# # Test separating data by class
-# separated = separate_by_class(dataset)
-# for label in separated:
-#     print(label)
-#     for row in separated[label]:
-#         print(row)
-
-
-# # Test summarizing a dataset
-# summary = summarize_dataset(dataset)
-# print(summary)
+    # # Test separating data by class
+    # separated = separate_by_class(dataset)
+    # for label in separated:
+    #     print(label)
+    #     for row in separated[label]:
+    #         print(row)
 
 
-# # Test summarizing by class
-# summaries = summarize_by_class(dataset)
-# for class_label, class_summary in summaries.items():
-#     print('Class {}'.format(class_label))
-#     for col_summary in class_summary:
-#         print(col_summary)
+    # # Test summarizing a dataset
+    # summary = summarize_dataset(dataset)
+    # print(summary)
 
 
-# # Test Gaussian PDF
-# print(calculate_probability(1.0, 1.0, 1.0))
-# print(calculate_probability(2.0, 1.0, 1.0))
-# print(calculate_probability(0.0, 1.0, 1.0))
+    # # Test summarizing by class
+    # summaries = summarize_by_class(dataset)
+    # for class_label, class_summary in summaries.items():
+    #     print('Class {}'.format(class_label))
+    #     for col_summary in class_summary:
+    #         print(col_summary)
 
 
-# # Test calculating class probabilities
-# summaries = summarize_by_class(dataset)
-# row = dataset[0]
-# probabilities = calculate_class_probabilities(summaries, row)
-# print(probabilities)
-# print(predict(summaries, row))
+    # # Test Gaussian PDF
+    # print(calculate_probability(1.0, 1.0, 1.0))
+    # print(calculate_probability(2.0, 1.0, 1.0))
+    # print(calculate_probability(0.0, 1.0, 1.0))
+
+
+    # # Test calculating class probabilities
+    # summaries = summarize_by_class(dataset)
+    # row = dataset[0]
+    # probabilities = calculate_class_probabilities(summaries, row)
+    # print(probabilities)
+    # print(predict(summaries, row))
 
 
 # Test Naive Bayes on Iris Dataset
-if __name__=='__main__':
     seed(1)
 
     dataset_base_path =os.path.join(os.path.dirname(os.getcwd()), 'datasets')
@@ -217,7 +141,7 @@ if __name__=='__main__':
 
     # evaluate algorithm
     n_folds = 5
-    scores = evaluate_algorithm(dataset, naive_bayes, 5)
+    scores = evaluate_algorithm(dataset, naive_bayes, 5, accuracy_metric)
     print('Scores: {}'.format(scores))
     print('Mean Accuracy: {:.3f}'.format(sum(scores)/float(len(scores))))
 
